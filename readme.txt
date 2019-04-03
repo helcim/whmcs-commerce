@@ -1,12 +1,11 @@
 == WHMCS Helcim Commerce Payment Gateway ==
 Copyright (C) 2018 Helcim Inc.
 
-Version: 1.0.0
-Release Date: January 26th, 2018
+Version: 1.0.1
 
 == Requirements ==
 
-1. WHMCS 7.4
+1. WHMCS 7.4 - 7.7.1
 2. PHP with cURL module enabled
 3. Valid SSL cert and PCI DSS validation
 
@@ -87,3 +86,6 @@ Please visit our website at https://www.helcim.com/ for information on signing u
 
 = 1.0.0 =
 * Initial release.
+
+= 1.0.1 =
+* Fixed Tokenization Issue
