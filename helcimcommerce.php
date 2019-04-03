@@ -7,11 +7,11 @@ function helcimcommerce_config(){
 	
 	// SET
 	$configarray = array(
-	 "FriendlyName" => array("Type" => "System", "Value"=>"Helcim Commerce"),
-	 "accountId" => array("FriendlyName" => "Account ID", "Type" => "text", "Size" => "20", ),
-	 "token" => array("FriendlyName" => "Token", "Type" => "text", "Size" => "20", ),     
-	 "url" => array("FriendlyName" => "Gateway URL", "Type" => "text", "Value"=>"https://secure.myhelcim.com/api/", "Size" => "128", ),
-	 "testmode" => array("FriendlyName" => "Test Mode", "Type" => "yesno", "Description" => "Tick this to run test transactions only", ),
+     "FriendlyName" => array("Type" => "System", "Value"=>"Helcim Commerce"),
+     "accountId" => array("FriendlyName" => "Account ID", "Type" => "text", "Size" => "20", ),
+     "token" => array("FriendlyName" => "Token", "Type" => "text", "Size" => "20", ),     
+     "url" => array("FriendlyName" => "Gateway URL", "Type" => "text", "Value"=>"https://secure.myhelcim.com/api/", "Size" => "128", ),
+     "testmode" => array("FriendlyName" => "Test Mode", "Type" => "yesno", "Description" => "Tick this to run test transactions only", ),
 	);
 	
 	// RETURN
@@ -22,20 +22,20 @@ function helcimcommerce_config(){
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function helcimcommerce_capture($params){
 
-	// GATEWAY SPECIFIC VARIABLES
+    // GATEWAY SPECIFIC VARIABLES
 	$accountId = $params['accountId'];
 	$apiToken = $params['token'];
 	$gatewayurl = $params['url'];
 	$gatewaytestmode = $params['testmode'] == 'Yes' ? 1 : 0;
 	$cvvIndicator = 1; # Change to 4 to disable CVV check
 
-	// INVOICE VARIABLES
+    // INVOICE VARIABLES
 	$invoiceid = $params['invoiceid'];
 	$amount = $params['amount']; // FORMAT: ##.##
-	$currency = $params['currency']; // CURRENCY CODE
+    $currency = $params['currency']; // CURRENCY CODE
 
-	// CLIENT VARIABLES
-	$clientid = $params['clientdetails']['id'];
+    // CLIENT VARIABLES
+    $clientid = $params['clientdetails']['id'];
 	$firstname = $params['clientdetails']['firstname'];
 	$lastname = $params['clientdetails']['lastname'];
 	$email = $params['clientdetails']['email'];
@@ -50,13 +50,13 @@ function helcimcommerce_capture($params){
 	// CARD DETAILS
 	// IF TOKEN EXISTS, USE IT
 	list($cardToken, $cardF4l4) = explode(';', $params['gatewayid']);
-	if (!$cardToken || !$cardF4l4) {	
+	if (!$cardToken || !$cardF4l4) {
 		$cardtype = $params['cardtype'];
 		$cardnumber = $params['cardnum'];
 		$cardexpiry = $params['cardexp']; // FORMAT: MMYY
 		$cardstart = $params['cardstart']; // FORMAT: MMYY
 		$cardissuenum = $params['cardissuenum'];
-		$cardcvv = $params["cccvv"];
+		$cardcvv = $params["cardcvv"];
 		if (!$cardcvv)
 			$cvvIndicator = 4;
 	}
@@ -73,7 +73,7 @@ function helcimcommerce_capture($params){
 				  '&cardCVV='.$cardcvv.'&orderId='.$invoiceid.'&billing_contactName='.$firstname.' '.$lastname.'&billing_email='.$email.
 				  '&billing_street1='.$address1.'&billing_street2='.$address2.'&billing_city='.$city.
 				  '&billing_province='.$state.'&billing_postalCode='.$postcode.'&billing_country='.$country.
-				  '&billing_phone='.$phone;
+				  '&billing_phone='.$phone.'&ipAddress='.@$_SERVER["REMOTE_ADDR"];
 	
 	// PERFORM TRANSACTION HERE & GENERATE $RESULTS ARRAY, EG:
 	$curlOptions = array( CURLOPT_RETURNTRANSFER => 1,
@@ -124,21 +124,21 @@ function helcimcommerce_capture($params){
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // FUNCTION - REFUND
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-function helcimcommerce_refund($params) {	
-	
-	// GATEWAY SPECIFIC VARIABLES
+function helcimcommerce_refund($params) {
+
+    // GATEWAY SPECIFIC VARIABLES
 	$accountId = $params['accountId'];
 	$apiToken = $params['token'];
 	$gatewayurl = $params['url'];
 	$gatewaytestmode = $params['testmode'] == 'Yes' ? 1 : 0;
 
-	// INVOICE VARIABLES
+    // INVOICE VARIABLES
 	$invoiceid = $params['invoiceid'];
 	$amount = $params['amount']; // FORMAT: ##.##
-	$currency = $params['currency']; // CURRENCY CODE
+    $currency = $params['currency']; // CURRENCY CODE
 
-	// CLIENT VARIABLES
-	$clientid = $params['clientdetails']['id'];
+    // CLIENT VARIABLES
+    $clientid = $params['clientdetails']['id'];
 	$firstname = $params['clientdetails']['firstname'];
 	$lastname = $params['clientdetails']['lastname'];
 	$email = $params['clientdetails']['email'];
@@ -172,7 +172,7 @@ function helcimcommerce_refund($params) {
 				  '&billing_contactName='.$firstname.' '.$lastname.'&billing_email='.$email.
 				  '&billing_street1='.$address1.'&billing_street2='.$address2.'&billing_city='.$city.
 				  '&billing_province='.$state.'&billing_postalCode='.$postcode.'&billing_country='.$country.
-				  '&billing_phone='.$phone;
+				  '&billing_phone='.$phone.'&ipAddress='.@$_SERVER["REMOTE_ADDR"];
 	
 	// PERFORM TRANSACTION HERE & GENERATE $RESULTS ARRAY, EG:
 	$curlOptions = array( CURLOPT_RETURNTRANSFER => 1,
@@ -199,6 +199,7 @@ function helcimcommerce_refund($params) {
 	$responseObj = @simplexml_load_string($response);
 	$responseArray = formatSimpleXMLToArray($responseObj);
 
+
 	// CHECK GATEWAY RESPONSE
 	if ($responseObj->response == 1) {
 
@@ -218,16 +219,21 @@ function helcimcommerce_refund($params) {
 // FUNCTION - STORE REMOTE
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function helcimcommerce_storeremote($params){
-
-	// GATEWAY SPECIFIC VARIABLES
+    
+    // GATEWAY SPECIFIC VARIABLES
 	$accountId = $params['accountId'];
 	$apiToken = $params['token'];
 	$gatewayurl = $params['url'];
 	$gatewaytestmode = $params['testmode'] == 'Yes' ? 1 : 0;
-	$cvvIndicator = 1; # Change to 4 to disable CVV check, must also be removed from WHMCS template
+	$cvvIndicator = 1; # Change to 4 to disable CVV check
 
-	// CLIENT VARIABLES
-	$clientid = $params['clientdetails']['id'];
+    // INVOICE VARIABLES
+	$invoiceid = $params['invoiceid'];
+	$amount = $params['amount']; // FORMAT: ##.##
+    $currency = $params['currency']; // CURRENCY CODE
+
+    // CLIENT VARIABLES
+    $clientid = $params['clientdetails']['id'];
 	$firstname = $params['clientdetails']['firstname'];
 	$lastname = $params['clientdetails']['lastname'];
 	$email = $params['clientdetails']['email'];
@@ -240,22 +246,33 @@ function helcimcommerce_storeremote($params){
 	$phone = $params['clientdetails']['phonenumber'];
 
 	// CARD DETAILS
-	$cardtype = $params['cardtype'];
-	$cardnumber = $params['cardnum'];
-	$cardexpiry = $params['cardexp']; // FORMAT: MMYY
-	$cardstart = $params['cardstart']; // FORMAT: MMYY
-	$cardissuenum = $params['cardissuenum'];
-	$cardcvv = $params["cccvv"];
+	// IF TOKEN EXISTS, USE IT
+	list($cardToken, $cardF4l4) = explode(';', $params['gatewayid']);
+	if (!$cardToken || !$cardF4l4) {	
+		$cardtype = $params['cardtype'];
+		$cardnumber = $params['cardnum'];
+		$cardexpiry = $params['cardexp']; // FORMAT: MMYY
+		$cardstart = $params['cardstart']; // FORMAT: MMYY
+		$cardissuenum = $params['cardissuenum'];
+		$cardcvv = $params["cardcvv"];
+		if (!$cardcvv)
+			$cvvIndicator = 4;
+	}
 
-	$cardFields = '&cardNumber='.$cardnumber.'&cardExpiry='.$cardexpiry;
+	if ($cardToken && $cardF4l4) {
+		$cvvIndicator = 4;
+		$cardFields = '&cardToken='.$cardToken.'&cardF4L4='.$cardF4l4;
+	} else {
+		$cardFields = '&cardNumber='.$cardnumber.'&cardExpiry='.$cardexpiry;
+	}
 
 	$postFields = 'accountId='.$accountId.'&apiToken='.$apiToken.'&test='.$gatewaytestmode.
-				  '&transactionType=preauth&allowZeroAmount=1&amount=0'.$amount.$cardFields.'&cvvIndicator='.$cvvIndicator.
-				  '&cardCVV='.$cardcvv.'&billing_contactName='.$firstname.' '.$lastname.'&billin g_email='.$email.
+				  '&transactionType=preauth&amount='.$amount.$cardFields.'&cvvIndicator='.$cvvIndicator.
+				  '&cardCVV='.$cardcvv.'&orderId='.$invoiceid.'&billing_contactName='.$firstname.' '.$lastname.'&billing_email='.$email.
 				  '&billing_street1='.$address1.'&billing_street2='.$address2.'&billing_city='.$city.
 				  '&billing_province='.$state.'&billing_postalCode='.$postcode.'&billing_country='.$country.
-				  '&billing_phone='.$phone;
-	
+				  '&billing_phone='.$phone.'&ipAddress='.@$_SERVER["REMOTE_ADDR"];
+
 	// PERFORM TRANSACTION HERE & GENERATE $RESULTS ARRAY, EG:
 	$curlOptions = array( CURLOPT_RETURNTRANSFER => 1,
 						  CURLOPT_AUTOREFERER => TRUE,
@@ -285,7 +302,7 @@ function helcimcommerce_storeremote($params){
 	if ($responseObj->response == 1){
 
 		// TRANSACTION COMPLETED SUCCESSFULLY
-		$gatewayid = $responseArray['cardToken'].';'.str_replace('*', '', $responseArray['cardNumber']);
+		$gatewayid = $responseArray['transaction']['cardToken'].';'.str_replace('*', '', $responseArray['transaction']['cardNumber']);
 		return array("status"=>"success","gatewayid"=>$gatewayid,"rawdata"=>$responseArray);
 	
 	}else{
