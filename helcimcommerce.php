@@ -70,7 +70,7 @@ function helcimcommerce_capture($params){
 
 	$postFields = 'accountId='.$accountId.'&apiToken='.$apiToken.'&test='.$gatewaytestmode.
 				  '&transactionType=purchase&amount='.$amount.$cardFields.'&cvvIndicator='.$cvvIndicator.
-				  '&cardCVV='.$cardcvv.'&orderId='.$invoiceid.'&billing_contactName='.$firstname.' '.$lastname.'&billing_email='.$email.
+				  '&cardCVV='.$cardcvv.'&orderNumber='.$invoiceid.'&billing_contactName='.$firstname.' '.$lastname.'&billing_email='.$email.
 				  '&billing_street1='.$address1.'&billing_street2='.$address2.'&billing_city='.$city.
 				  '&billing_province='.$state.'&billing_postalCode='.$postcode.'&billing_country='.$country.
 				  '&billing_phone='.$phone.'&ipAddress='.@$_SERVER["REMOTE_ADDR"];
@@ -107,11 +107,12 @@ function helcimcommerce_capture($params){
 		
 		// UPDATE TOKEN
 		$table = "tblclients";
-		$update = array("gatewayid"=>$responseArray['cardToken'].';'.str_replace('*', '', $responseArray['cardNumber']));
+		$update = array("gatewayid"=>$responseArray['transaction']['cardToken'].';'.str_replace('*', '', $responseArray['transaction']['cardNumber']));
 		$where = array("id"=>$clientid);
 		update_query($table,$update,$where);
 
 		return array("status"=>"success","transid"=>$responseArray["transactionId"],"rawdata"=>$responseArray);
+
 	}else{
 
 		// TRANSACTION DECLINED
@@ -268,7 +269,7 @@ function helcimcommerce_storeremote($params){
 
 	$postFields = 'accountId='.$accountId.'&apiToken='.$apiToken.'&test='.$gatewaytestmode.
 				  '&transactionType=preauth&amount='.$amount.$cardFields.'&cvvIndicator='.$cvvIndicator.
-				  '&cardCVV='.$cardcvv.'&orderId='.$invoiceid.'&billing_contactName='.$firstname.' '.$lastname.'&billing_email='.$email.
+				  '&cardCVV='.$cardcvv.'&orderNumber='.$invoiceid.'&billing_contactName='.$firstname.' '.$lastname.'&billing_email='.$email.
 				  '&billing_street1='.$address1.'&billing_street2='.$address2.'&billing_city='.$city.
 				  '&billing_province='.$state.'&billing_postalCode='.$postcode.'&billing_country='.$country.
 				  '&billing_phone='.$phone.'&ipAddress='.@$_SERVER["REMOTE_ADDR"];
