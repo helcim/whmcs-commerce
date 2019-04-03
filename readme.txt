@@ -1,7 +1,7 @@
 == WHMCS Helcim Commerce Payment Gateway ==
 Copyright (C) 2018 Helcim Inc.
 
-Version: 1.0.1
+Version: 1.0.2
 
 == Requirements ==
 
@@ -87,5 +87,5 @@ Please visit our website at https://www.helcim.com/ for information on signing u
 = 1.0.0 =
 * Initial release.
 
-= 1.0.1 =
+= 1.0.2 =
 * Fixed Tokenization Issue
