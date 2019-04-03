@@ -7,11 +7,11 @@ function helcimcommerce_config(){
 	
 	// SET
 	$configarray = array(
-     "FriendlyName" => array("Type" => "System", "Value"=>"Helcim Commerce"),
-     "accountId" => array("FriendlyName" => "Account ID", "Type" => "text", "Size" => "20", ),
-     "token" => array("FriendlyName" => "Token", "Type" => "text", "Size" => "20", ),     
-     "url" => array("FriendlyName" => "Gateway URL", "Type" => "text", "Value"=>"https://secure.myhelcim.com/api/", "Size" => "128", ),
-     "testmode" => array("FriendlyName" => "Test Mode", "Type" => "yesno", "Description" => "Tick this to run test transactions only", ),
+	 "FriendlyName" => array("Type" => "System", "Value"=>"Helcim Commerce"),
+	 "accountId" => array("FriendlyName" => "Account ID", "Type" => "text", "Size" => "20", ),
+	 "token" => array("FriendlyName" => "Token", "Type" => "text", "Size" => "20", ),     
+	 "url" => array("FriendlyName" => "Gateway URL", "Type" => "text", "Value"=>"https://secure.myhelcim.com/api/", "Size" => "128", ),
+	 "testmode" => array("FriendlyName" => "Test Mode", "Type" => "yesno", "Description" => "Tick this to run test transactions only", ),
 	);
 	
 	// RETURN
@@ -22,20 +22,20 @@ function helcimcommerce_config(){
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function helcimcommerce_capture($params){
 
-    // GATEWAY SPECIFIC VARIABLES
+	// GATEWAY SPECIFIC VARIABLES
 	$accountId = $params['accountId'];
 	$apiToken = $params['token'];
 	$gatewayurl = $params['url'];
 	$gatewaytestmode = $params['testmode'] == 'Yes' ? 1 : 0;
 	$cvvIndicator = 1; # Change to 4 to disable CVV check
 
-    // INVOICE VARIABLES
+	// INVOICE VARIABLES
 	$invoiceid = $params['invoiceid'];
 	$amount = $params['amount']; // FORMAT: ##.##
-    $currency = $params['currency']; // CURRENCY CODE
+	$currency = $params['currency']; // CURRENCY CODE
 
-    // CLIENT VARIABLES
-    $clientid = $params['clientdetails']['id'];
+	// CLIENT VARIABLES
+	$clientid = $params['clientdetails']['id'];
 	$firstname = $params['clientdetails']['firstname'];
 	$lastname = $params['clientdetails']['lastname'];
 	$email = $params['clientdetails']['email'];
@@ -126,19 +126,19 @@ function helcimcommerce_capture($params){
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function helcimcommerce_refund($params) {
 
-    // GATEWAY SPECIFIC VARIABLES
+	// GATEWAY SPECIFIC VARIABLES
 	$accountId = $params['accountId'];
 	$apiToken = $params['token'];
 	$gatewayurl = $params['url'];
 	$gatewaytestmode = $params['testmode'] == 'Yes' ? 1 : 0;
 
-    // INVOICE VARIABLES
+	// INVOICE VARIABLES
 	$invoiceid = $params['invoiceid'];
 	$amount = $params['amount']; // FORMAT: ##.##
-    $currency = $params['currency']; // CURRENCY CODE
+	$currency = $params['currency']; // CURRENCY CODE
 
-    // CLIENT VARIABLES
-    $clientid = $params['clientdetails']['id'];
+	// CLIENT VARIABLES
+	$clientid = $params['clientdetails']['id'];
 	$firstname = $params['clientdetails']['firstname'];
 	$lastname = $params['clientdetails']['lastname'];
 	$email = $params['clientdetails']['email'];
@@ -219,21 +219,21 @@ function helcimcommerce_refund($params) {
 // FUNCTION - STORE REMOTE
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function helcimcommerce_storeremote($params){
-    
-    // GATEWAY SPECIFIC VARIABLES
+	
+	// GATEWAY SPECIFIC VARIABLES
 	$accountId = $params['accountId'];
 	$apiToken = $params['token'];
 	$gatewayurl = $params['url'];
 	$gatewaytestmode = $params['testmode'] == 'Yes' ? 1 : 0;
 	$cvvIndicator = 1; # Change to 4 to disable CVV check
 
-    // INVOICE VARIABLES
+	// INVOICE VARIABLES
 	$invoiceid = $params['invoiceid'];
 	$amount = $params['amount']; // FORMAT: ##.##
-    $currency = $params['currency']; // CURRENCY CODE
+	$currency = $params['currency']; // CURRENCY CODE
 
-    // CLIENT VARIABLES
-    $clientid = $params['clientdetails']['id'];
+	// CLIENT VARIABLES
+	$clientid = $params['clientdetails']['id'];
 	$firstname = $params['clientdetails']['firstname'];
 	$lastname = $params['clientdetails']['lastname'];
 	$email = $params['clientdetails']['email'];
