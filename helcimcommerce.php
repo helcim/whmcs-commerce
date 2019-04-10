@@ -73,7 +73,7 @@ function helcimcommerce_capture($params){
 				  '&cardCVV='.$cardcvv.'&orderNumber='.$invoiceid.'&billing_contactName='.$firstname.' '.$lastname.'&billing_email='.$email.
 				  '&billing_street1='.$address1.'&billing_street2='.$address2.'&billing_city='.$city.
 				  '&billing_province='.$state.'&billing_postalCode='.$postcode.'&billing_country='.$country.
-				  '&billing_phone='.$phone;
+				  '&billing_phone='.$phone.'&ipAddress='.@$_SERVER["REMOTE_ADDR"];
 	
 	// PERFORM TRANSACTION HERE & GENERATE $RESULTS ARRAY, EG:
 	$curlOptions = array( CURLOPT_RETURNTRANSFER => 1,
@@ -172,7 +172,7 @@ function helcimcommerce_refund($params) {
 				  '&billing_contactName='.$firstname.' '.$lastname.'&billing_email='.$email.
 				  '&billing_street1='.$address1.'&billing_street2='.$address2.'&billing_city='.$city.
 				  '&billing_province='.$state.'&billing_postalCode='.$postcode.'&billing_country='.$country.
-				  '&billing_phone='.$phone;
+				  '&billing_phone='.$phone.'&ipAddress='.@$_SERVER["REMOTE_ADDR"];
 	
 	// PERFORM TRANSACTION HERE & GENERATE $RESULTS ARRAY, EG:
 	$curlOptions = array( CURLOPT_RETURNTRANSFER => 1,
@@ -254,8 +254,8 @@ function helcimcommerce_storeremote($params){
 				  '&cardCVV='.$cardcvv.'&billing_contactName='.$firstname.' '.$lastname.'&billin g_email='.$email.
 				  '&billing_street1='.$address1.'&billing_street2='.$address2.'&billing_city='.$city.
 				  '&billing_province='.$state.'&billing_postalCode='.$postcode.'&billing_country='.$country.
-				  '&billing_phone='.$phone;
-	
+				  '&billing_phone='.$phone.'&ipAddress='.@$_SERVER["REMOTE_ADDR"];
+
 	// PERFORM TRANSACTION HERE & GENERATE $RESULTS ARRAY, EG:
 	$curlOptions = array( CURLOPT_RETURNTRANSFER => 1,
 						  CURLOPT_AUTOREFERER => TRUE,
