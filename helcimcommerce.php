@@ -50,7 +50,7 @@ function helcimcommerce_capture($params){
 	// CARD DETAILS
 	// IF TOKEN EXISTS, USE IT
 	list($cardToken, $cardF4l4) = explode(';', $params['gatewayid']);
-	if (!$cardToken || !$cardF4l4) {
+	if (!$cardToken || !$cardF4l4) {	
 		$cardtype = $params['cardtype'];
 		$cardnumber = $params['cardnum'];
 		$cardexpiry = $params['cardexp']; // FORMAT: MMYY
@@ -104,15 +104,14 @@ function helcimcommerce_capture($params){
 	if (@$responseObj->response == 1) {
 
 		// TRANSACTION COMPLETED SUCCESSFULLY
-		
+
 		// UPDATE TOKEN
 		$table = "tblclients";
 		$update = array("gatewayid"=>$responseArray['transaction']['cardToken'].';'.str_replace('*', '', $responseArray['transaction']['cardNumber']));
 		$where = array("id"=>$clientid);
 		update_query($table,$update,$where);
 
-		return array("status"=>"success","transid"=>$responseArray["transactionId"],"rawdata"=>$responseArray);
-
+		return array("status"=>"success","transid"=>$responseArray['transaction']["transactionId"],"rawdata"=>$responseArray);
 	}else{
 
 		// TRANSACTION DECLINED
@@ -125,8 +124,8 @@ function helcimcommerce_capture($params){
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // FUNCTION - REFUND
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-function helcimcommerce_refund($params) {
-
+function helcimcommerce_refund($params) {	
+	
 	// GATEWAY SPECIFIC VARIABLES
 	$accountId = $params['accountId'];
 	$apiToken = $params['token'];
@@ -200,12 +199,11 @@ function helcimcommerce_refund($params) {
 	$responseObj = @simplexml_load_string($response);
 	$responseArray = formatSimpleXMLToArray($responseObj);
 
-
 	// CHECK GATEWAY RESPONSE
 	if ($responseObj->response == 1) {
 
 		// TRANSACTION COMPLETED SUCCESSFULLY
-		return array("status"=>"success","transid"=>$responseArray["transactionId"],"rawdata"=>$responseArray);
+		return array("status"=>"success","transid"=>$responseArray['transaction']["transactionId"],"rawdata"=>$responseArray);
 	
 	}else{
 
@@ -220,18 +218,13 @@ function helcimcommerce_refund($params) {
 // FUNCTION - STORE REMOTE
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function helcimcommerce_storeremote($params){
-	
+
 	// GATEWAY SPECIFIC VARIABLES
 	$accountId = $params['accountId'];
 	$apiToken = $params['token'];
 	$gatewayurl = $params['url'];
 	$gatewaytestmode = $params['testmode'] == 'Yes' ? 1 : 0;
-	$cvvIndicator = 1; # Change to 4 to disable CVV check
-
-	// INVOICE VARIABLES
-	$invoiceid = $params['invoiceid'];
-	$amount = $params['amount']; // FORMAT: ##.##
-	$currency = $params['currency']; // CURRENCY CODE
+	$cvvIndicator = 1; # Change to 4 to disable CVV check, must also be removed from WHMCS template
 
 	// CLIENT VARIABLES
 	$clientid = $params['clientdetails']['id'];
@@ -247,29 +240,18 @@ function helcimcommerce_storeremote($params){
 	$phone = $params['clientdetails']['phonenumber'];
 
 	// CARD DETAILS
-	// IF TOKEN EXISTS, USE IT
-	list($cardToken, $cardF4l4) = explode(';', $params['gatewayid']);
-	if (!$cardToken || !$cardF4l4) {	
-		$cardtype = $params['cardtype'];
-		$cardnumber = $params['cardnum'];
-		$cardexpiry = $params['cardexp']; // FORMAT: MMYY
-		$cardstart = $params['cardstart']; // FORMAT: MMYY
-		$cardissuenum = $params['cardissuenum'];
-		$cardcvv = $params["cardcvv"];
-		if (!$cardcvv)
-			$cvvIndicator = 4;
-	}
+	$cardtype = $params['cardtype'];
+	$cardnumber = $params['cardnum'];
+	$cardexpiry = $params['cardexp']; // FORMAT: MMYY
+	$cardstart = $params['cardstart']; // FORMAT: MMYY
+	$cardissuenum = $params['cardissuenum'];
+	$cardcvv = $params["cardcvv"];
 
-	if ($cardToken && $cardF4l4) {
-		$cvvIndicator = 4;
-		$cardFields = '&cardToken='.$cardToken.'&cardF4L4='.$cardF4l4;
-	} else {
-		$cardFields = '&cardNumber='.$cardnumber.'&cardExpiry='.$cardexpiry;
-	}
+	$cardFields = '&cardNumber='.$cardnumber.'&cardExpiry='.$cardexpiry;
 
 	$postFields = 'accountId='.$accountId.'&apiToken='.$apiToken.'&test='.$gatewaytestmode.
-				  '&transactionType=preauth&amount='.$amount.$cardFields.'&cvvIndicator='.$cvvIndicator.
-				  '&cardCVV='.$cardcvv.'&orderNumber='.$invoiceid.'&billing_contactName='.$firstname.' '.$lastname.'&billing_email='.$email.
+				  '&transactionType=verify&amount=0'.$cardFields.'&cvvIndicator='.$cvvIndicator.
+				  '&cardCVV='.$cardcvv.'&billing_contactName='.$firstname.' '.$lastname.'&billin g_email='.$email.
 				  '&billing_street1='.$address1.'&billing_street2='.$address2.'&billing_city='.$city.
 				  '&billing_province='.$state.'&billing_postalCode='.$postcode.'&billing_country='.$country.
 				  '&billing_phone='.$phone.'&ipAddress='.@$_SERVER["REMOTE_ADDR"];
